@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Copy the stage to the dev for coffeeiv project</description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>10</daysToKeep>
+    <numToKeep>-1</numToKeep>
+    <artifactDaysToKeep>-1</artifactDaysToKeep>
+    <artifactNumToKeep>-1</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>source_db</name>
+          <description></description>
+          <defaultValue>coffeeiv_s</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>target_db</name>
+          <description></description>
+          <defaultValue>coffeeiv</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>rgr-local</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>mysqldump -uroot -pXXXXX $target_db &gt; /tmp/$target_db.${BUILD_ID}.sql
+mv /tmp/$target_db.${BUILD_ID}.sql /opt/backup/db
+mysqldump -uroot -pXXXXX $source_db &gt; /tmp/$source_db.sql
+echo &quot;DROP DATABASE IF EXISTS $target_db;CREATE DATABASE $target_db&quot; | mysql -uroot -pXXXXX
+mysql -uroot -pXXXXX $target_db &lt; /tmp/$source_db.sql
+rm /tmp/$source_db.sql
+
+# cd /home/rgr/www/coffeeiv/www
+# drush sanitize
+# drush upwd admin --password=&quot;newpassword&quot;</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

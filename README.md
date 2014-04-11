@@ -9,5 +9,7 @@ testing, and a few other things.
 
 Each job is a directory that can be copied to your 
 /var/lib/jenkins/jobs directory.  You will probably have to set
-permissions on them.
+permissions -- "sudo chown -R jenkins /var/lib/jenkins/jobs" will
+usually do the trick.
+
 
